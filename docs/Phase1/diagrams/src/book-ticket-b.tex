@@ -1,0 +1,34 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {Name and booking ID accepted};
+\node[io,below=of s] (m) {Read movie code};
+\node[dec,below=of m] (d1) {Code is 1, 2 or 3?};
+\node[dec,below=of d1] (f) {Movie has a free seat?};
+\node[err,right=12mm of f] (e0) {ERROR: Movie is full!};
+\node[term,below=of e0] (r) {Return to menu};
+\node[io,below=of f] (t) {Read seat number};
+\node[dec,below=of t] (d2) {Seat is 1 to 20?};
+\node[dec,below=of d2] (d3) {Seat free in this movie's seat map?};
+\node[err,right=12mm of d3] (e1) {ERROR: Seat already reserved!};
+\node[io,below=of d3] (c) {Read ticket category};
+\node[dec,below=of c] (d4) {Category is 1, 2 or 3?};
+\node[term,below=of d4] (g) {Go to pricing and commit, Figure 4};
+\draw[go] (s)--(m);\draw[go] (m)--(d1);
+\draw[go] (d1)--node[lab]{Yes}(f);
+\draw[go] (d1.west)--node[lab,pos=.3]{No}++(-7mm,0)|-(m.west);
+\draw[go] (f)--node[lab]{Yes}(t);
+\draw[go] (f)--node[lab]{No}(e0);
+\draw[go] (e0)--(r);
+\draw[go] (t)--(d2);
+\draw[go] (d2)--node[lab]{Yes}(d3);
+\draw[go] (d2.west)--node[lab,pos=.3]{No}++(-7mm,0)|-(t.west);
+\draw[go] (d3)--node[lab]{Yes}(c);
+\draw[go] (d3)--node[lab]{No}(e1);
+\draw[go] (e1.north)|-(t.east);
+\draw[go] (c)--(d4);
+\draw[go] (d4)--node[lab]{Yes}(g);
+\draw[go] (d4.west)--node[lab,pos=.3]{No}++(-7mm,0)|-(c.west);
+\end{tikzpicture}
+\end{document}

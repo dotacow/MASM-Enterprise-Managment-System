@@ -1,0 +1,23 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {Display Ticket};
+\node[io,below=of s] (r) {Read booking ID};
+\node[proc,below=of r] (i) {index = 0};
+\node[dec,below=of i] (d) {index below 60?};
+\node[dec,below=of d] (m) {Slot active and ID matches?};
+\node[proc,right=12mm of m,text width=26mm] (n) {index = index + 1};
+\node[err,left=12mm of m] (e) {ERROR: Booking ID not found!};
+\node[io,below=of m,text width=36mm] (t) {Print the formatted ticket from this record};
+\node[term,below=of t] (x) {Return to menu};
+\draw[go] (s)--(r);\draw[go] (r)--(i);\draw[go] (i)--(d);
+\draw[go] (d)--node[lab]{Yes}(m);
+\draw[go] (d.west)-|node[lab,pos=.25]{No}(e.north);
+\draw[go] (m)--node[lab]{No}(n);
+\draw[go] (n.north)|-(d.east);
+\draw[go] (m)--node[lab]{Yes}(t);
+\draw[go] (t)--(x);
+\draw[go] (e.south)|-(x.west);
+\end{tikzpicture}
+\end{document}

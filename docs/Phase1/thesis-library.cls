@@ -268,12 +268,9 @@
     %{\Large \textbf{\fontsize{20pt}{24pt}\selectfont \titleB}}\\[0.75cm]
 
     {\fontsize{17pt}{22pt}\selectfont \by}\\[0.0cm]
-    {\fontsize{17pt}{22pt}\selectfont \textbf{\authorname}}\\[0.05cm]
-    {\fontsize{16pt}{22pt}\selectfont \authornumber}\\[0.75cm]
-    {\fontsize{17pt}{22pt}\selectfont \supervisor}\\[0.0cm]
-    {\fontsize{17pt}{22pt}\selectfont \textbf{\supervisorNameStyle}}\\[0.75cm]
-    {\fontsize{17pt}{22pt}\selectfont \cosupervisor}\\[0.0cm]
-    {\fontsize{17pt}{22pt}\selectfont \textbf{\cosupervisorNameStyle}}\\[1.5cm]
+    {\fontsize{17pt}{22pt}\selectfont \textbf{\authorname}}\\[0.75cm]
+        {\fontsize{17pt}{22pt}\selectfont \supervisor}\\[0.0cm]
+    {\fontsize{17pt}{22pt}\selectfont \textbf{\supervisorNameStyle}}\\[1.5cm]
     
     {\fontsize{17pt}{22pt}\selectfont \degreeLineA}\\[0.75cm]
     %{\fontsize{17pt}{22pt}\selectfont \textbf{\degreeLineB}}\\[0.0cm]

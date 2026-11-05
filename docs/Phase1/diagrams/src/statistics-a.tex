@@ -1,0 +1,21 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {Statistics};
+\node[proc,below=of s] (c) {Clear per-movie counts and revenue, category counts and overall total};
+\node[proc,below=of c] (i) {index = 0};
+\node[dec,below=of i] (d) {index below 60?};
+\node[term,right=12mm of d] (g) {Go to derived figures and report, Figure 9};
+\node[dec,below=of d] (a) {Slot active?};
+\node[proc,below=of a,text width=42mm] (u) {Add 1 to that movie's booking count, add the final price to that movie's revenue, add 1 to that ticket category's count};
+\node[proc,below=of u] (n) {index = index + 1};
+\draw[go] (s)--(c);\draw[go] (c)--(i);\draw[go] (i)--(d);
+\draw[go] (d)--node[lab]{Yes}(a);
+\draw[go] (d)--node[lab]{No}(g);
+\draw[go] (a)--node[lab]{Yes}(u);
+\draw[go] (u)--(n);
+\draw[go] (a.east)--node[lab,pos=.2]{No}++(24mm,0)|-(n.east);
+\draw[go] (n.west)--++(-14mm,0)|-(d.west);
+\end{tikzpicture}
+\end{document}
