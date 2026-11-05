@@ -1,0 +1,16 @@
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\renewcommand{\familydefault}{\sfdefault}
+\usetikzlibrary{shapes.geometric,positioning,arrows.meta,calc}
+\tikzset{
+  node distance=6mm,
+  every node/.style={font=\footnotesize,align=center,execute at begin node={\hyphenpenalty=10000\relax}},
+  base/.style={draw=gray!60,fill=gray!12,minimum height=7mm,inner sep=2pt},
+  term/.style={base,rounded corners=3.5mm,text width=30mm},
+  proc/.style={base,text width=32mm},
+  err/.style={base,text width=30mm,fill=gray!22},
+  io/.style={base,trapezium,trapezium left angle=72,trapezium right angle=108,trapezium stretches=true,text width=28mm},
+  dec/.style={base,diamond,aspect=2.4,text width=27mm,inner sep=0pt},
+  go/.style={-{Stealth[length=2mm]},draw=gray!55!black},
+  lab/.style={font=\scriptsize,fill=white,inner sep=1pt},
+}
