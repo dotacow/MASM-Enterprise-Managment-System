@@ -1,146 +1,213 @@
-\documentclass[12pt]{report}
+% University: Applied Science Private University
 
-% ---------- Packages ----------
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[a4paper,margin=1in]{geometry}
+\documentclass{thesis-library}
 \usepackage{array}
-\usepackage{graphicx}
-\usepackage{float}
-\usepackage{caption}
-\usepackage{fancyhdr}
-\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
-
-% ---------- Section numbering: this file is Chapter Two ----------
-\renewcommand{\thesection}{2.\arabic{section}}
-\renewcommand{\thesubsection}{2.\arabic{section}.\arabic{subsection}}
-
-% ---------- Running header: centred chapter title, rule below ----------
-\pagestyle{fancy}
-\setlength{\headheight}{15pt}
-\fancyhf{}
-\fancyhead[C]{\bfseries Chapter Two: Problem Analysis}
-\fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\footrulewidth}{0pt}
 
 \begin{document}
 
-% ---------- Chapter-opening page ----------
-\thispagestyle{empty}
-\vspace*{\stretch{1}}
-\begin{center}
-{\Large\bfseries Chapter Two}\\[1em]
-{\Large\bfseries Problem Analysis}
-\end{center}
-\vspace*{\stretch{2}}
-\clearpage
+\newcommand{\thesisTitle}{Cinema Ticket Reservation and Revenue Management System (CTRMS)\\[0.3cm]\large Phase 1: Proposal \& Analysis}
+\newcommand{\byLabel}{By (Group 102):}
+\newcommand{\studentName}{Noureddin Ghazal \quad Yousef Kitaneh \quad Ahmad Jahaf}
+\newcommand{\authornumber}{202511039 \quad\ \ 202311043 \quad\ \ 202310390}
+\newcommand{\supervisorLabel}{Instructor:}
+\newcommand{\supervisorName}{Dr. Khaled Al-Hashash}
+\newcommand{\coSupervisorLabel}{\mbox{}}
+\newcommand{\coSupervisorName}{\mbox{}}
+\newcommand{\degreeLineALabel}{This project was submitted in Partial Fulfillment of the Requirements for the Microcomputer Systems and Assembly Language Course (1301224)}
+\newcommand{\majorName}{}
+\newcommand{\universityName}{Applied Science Private University}
+\newcommand{\deanshipName}{Faculty of Information Technology}
+\newcommand{\regionName}{Amman - Jordan}
+\newcommand{\degreeyearName}{2026}
+\newcommand{\degreemonthName}{November}
+
+\makecoverpage
+
+\pagenumbering{roman}
+
+\newpage
+\chapter*{\centering \Huge Table of Contents}
+\addcontentsline{toc}{chapter}{Table of Contents}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
+\tableofcontents
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+
+\newpage
+\listoftablesname
+
+\newpage
+\listoffiguresname
+
+\newpage
+\pagenumbering{arabic}
+
+% ── Chapter 1: Project Proposal ─────────────────────────────────────────────
+
+\printchaptertitle{Project Proposal}
+
+\section{Project Title}
+
+Cinema Ticket Reservation and Revenue Management System (CTRMS), built in x86 Assembly
+Language (MASM) with the Irvine32 library.
+
+\section{Problem Statement}
+
+A small cinema runs three halls. Each hall shows one movie (Movie A, B or C) and has 20 seats.
+If bookings are taken by hand, staff can sell the same seat twice, apply the wrong discount,
+lose track of cancellations, and only work out revenue and occupancy by hand at the end of the day.
+
+CTRMS solves this with a console program. It takes and validates bookings, stops a seat from
+being reserved twice, works out the price from the movie and ticket category, handles
+cancellations, and prints tickets, seating maps and revenue statistics on demand. It keeps up to
+60 active bookings in memory as fixed-size records.
+
+\section{Scope}
+
+\subsection*{Included}
+\begin{itemize}
+  \item A main menu with six options: Book New Ticket, Cancel Booking, Display Ticket, Display
+        Seating Map, Booking \& Revenue Statistics, and Exit.
+  \item Booking entry with validation:
+  \begin{itemize}
+    \item Customer name: 1--20 characters, not empty.
+    \item Booking ID: unique, six digits (100000--999999).
+    \item Movie code: 1--3.
+    \item Seat: 1--20 and not already taken.
+    \item Ticket category: 1 = Adult, 2 = Student, 3 = Child.
+  \end{itemize}
+  \item Ticket pricing with integer math only. The base prices are A = 8, B = 7 and C = 6 JOD.
+        Students get 1 JOD off and children get 2 JOD off.
+  \item Cancelling a booking by its ID, which marks the record inactive and frees its seat.
+  \item A formatted ticket for any active booking, looked up by its ID.
+  \item A seating map for each movie. It shows [O] for an available seat and [X] for a reserved
+        one, followed by the reserved count and occupancy \%.
+  \item A statistics report with:
+  \begin{itemize}
+    \item Bookings, revenue and occupancy for each movie.
+    \item Total bookings, overall revenue and the average ticket price.
+    \item The most and least booked movies.
+    \item An asterisk histogram of the ticket categories.
+  \end{itemize}
+  \item Specific error messages for bad input, a duplicate ID, full capacity (60 bookings or
+        20 seats) and an already reserved seat.
+\end{itemize}
+
+\subsection*{Excluded}
+\begin{itemize}
+  \item Saving data to files or a database. All data is lost when the program exits.
+  \item More than three movies, more than 20 seats per hall, or show times and dates.
+  \item Online payment, receipts and printer output.
+  \item Changing a booking. To change one, cancel it and book again.
+  \item User accounts, logins and access roles.
+  \item Fractional prices or floating-point math.
+  \item A graphical interface. The program is console only.
+\end{itemize}
+
+\section{Objectives}
+
+\begin{enumerate}
+  \item \textbf{Correct booking:} accept a valid booking for any of the 3 movies and store it in
+        a fixed-size record. The program must hold 60 active bookings at once and reject the
+        61st with a capacity message.
+  \item \textbf{No double booking:} reject 100\% of attempts to book a seat that is already
+        reserved, or to reuse an active booking ID.
+  \item \textbf{Correct pricing:} calculate the final price as the base price minus the category
+        discount. All 9 movie and category combinations must give the expected values, from
+        8 JOD (Movie A, Adult) down to 4 JOD (Movie C, Child).
+  \item \textbf{Working cancellation:} cancelling an active ID marks its record inactive and
+        frees its seat, so the same seat can be booked again in the same run.
+  \item \textbf{Accurate reporting:} produce the statistics report from the active records only.
+        The counts, revenue, integer average, occupancy \% and histogram must match a hand
+        calculation of the same test data.
+  \item \textbf{Course outcomes:} cover all of the required techniques, which are:
+  \begin{itemize}
+    \item At least 8 procedures (12 or more is the target).
+    \item Two loop styles: LOOP and a JMP-based while loop.
+    \item IF, IF-ELSE and nested conditionals.
+    \item All of the required data types: strings, DWORDs, bytes, characters and arrays.
+  \end{itemize}
+\end{enumerate}
+
+\section{Success Criteria}
+
+The project will be judged complete when all of the criteria in Table~\ref{tab:success} hold.
+
+\begin{table}[H]
+\centering
+\caption{Success criteria and how each is checked}
+\label{tab:success}
+\small
+\begin{tabular}{|c|p{6cm}|p{7.2cm}|}
+\hline
+\textbf{\#} & \textbf{Criterion} & \textbf{How it is checked} \\ \hline
+1 & The program assembles and runs in MASM with Irvine32 without errors & Build and run on a lab machine \\ \hline
+2 & All 6 menu options work, and an invalid choice shows an error and the menu again & Manual test of each option, plus the inputs 0, 7 and letters \\ \hline
+3 & Every validation rule rejects bad input with its own error message & A test case per rule: empty or 21-character name, ID 99999 or 1000000, duplicate ID, movie 4, seat 0 or 21, reserved seat, category 4 \\ \hline
+4 & Prices are correct for all 9 movie and category combinations & A table of expected prices compared with the printed tickets \\ \hline
+5 & Cancelled seats appear as [O] again and are left out of the statistics & Book, cancel, then check the seating map and the report \\ \hline
+6 & Statistics match a hand calculation & Book the sample set (16 bookings, 101 JOD) and compare with the report format in the brief \\ \hline
+7 & Capacity limits hold & Fill a hall to 20 seats, then try to fill the system past 60 bookings \\ \hline
+8 & Output matches the formats in the brief & Compare the menu, ticket, seating map and statistics screens with section 2.3 of the brief \\ \hline
+9 & The required techniques are present & A code review checklist of procedures, loop styles, conditionals and data types \\ \hline
+\end{tabular}
+\end{table}
+
+% ── Chapter 2: Problem Analysis (open for the team) ─────────────────────────
+
+% ── Chapter 2: Problem Analysis ──
+
+\printchaptertitle{Problem Analysis}
 
 \section{Input Analysis}
 
 The system reads input only from the console keyboard. There is no file input, no network input and no stored configuration. Nine distinct inputs exist across the six menu options.
 
-\begin{enumerate}
-
-\item \textbf{Menu choice}
-\begin{itemize}
-\item \textbf{Where entered:} main menu
-\item \textbf{Data type and size:} unsigned byte
-\item \textbf{Valid range:} 1 to 6
-\item \textbf{Validation rule:} must be an integer from 1 to 6
-\item \textbf{Error response:} show ``Invalid choice'' and redisplay the menu
-\end{itemize}
-
-\item \textbf{Customer name}
-\begin{itemize}
-\item \textbf{Where entered:} Book New Ticket
-\item \textbf{Data type and size:} ASCII string, 1 byte per character, stored in a 21-byte field (20 characters plus a null terminator)
-\item \textbf{Valid range:} 1--20 characters
-\item \textbf{Validation rule:} must not be empty and must not exceed 20 characters
-\item \textbf{Error response:} show a name error and re-prompt
-\end{itemize}
-
-\item \textbf{Booking ID (new)}
-\begin{itemize}
-\item \textbf{Where entered:} Book New Ticket
-\item \textbf{Data type and size:} unsigned doubleword
-\item \textbf{Valid range:} 100000--999999
-\item \textbf{Validation rule:} must be exactly six digits in range, and must not match the ID of any \textbf{active} record
-\item \textbf{Error response:} out of range, re-prompt; duplicate, ``ERROR: Booking ID already exists!''
-\end{itemize}
-
-\item \textbf{Movie code}
-\begin{itemize}
-\item \textbf{Where entered:} Book New Ticket
-\item \textbf{Data type and size:} unsigned byte
-\item \textbf{Valid range:} 1 to 3
-\item \textbf{Validation rule:} 1 = Movie A, 2 = Movie B, 3 = Movie C
-\item \textbf{Error response:} show a movie code error and re-prompt
-\end{itemize}
-
-\item \textbf{Seat number}
-\begin{itemize}
-\item \textbf{Where entered:} Book New Ticket
-\item \textbf{Data type and size:} unsigned byte
-\item \textbf{Valid range:} 1 to 20
-\item \textbf{Validation rule:} must be in range \textbf{and} currently free in the seat map of the chosen movie
-\item \textbf{Error response:} out of range, re-prompt; taken, ``ERROR: Seat already reserved!''
-\end{itemize}
-
-\item \textbf{Ticket category}
-\begin{itemize}
-\item \textbf{Where entered:} Book New Ticket
-\item \textbf{Data type and size:} unsigned byte
-\item \textbf{Valid range:} 1 to 3
-\item \textbf{Validation rule:} 1 = Adult, 2 = Student, 3 = Child
-\item \textbf{Error response:} show a category error and re-prompt
-\end{itemize}
-
-\item \textbf{Booking ID (cancel)}
-\begin{itemize}
-\item \textbf{Where entered:} Cancel Booking
-\item \textbf{Data type and size:} unsigned doubleword
-\item \textbf{Valid range:} 100000--999999
-\item \textbf{Validation rule:} must match an \textbf{active} record
-\item \textbf{Error response:} ``ERROR: Booking ID not found!''
-\end{itemize}
-
-\item \textbf{Booking ID (display)}
-\begin{itemize}
-\item \textbf{Where entered:} Display Ticket
-\item \textbf{Data type and size:} unsigned doubleword
-\item \textbf{Valid range:} 100000--999999
-\item \textbf{Validation rule:} must match an \textbf{active} record
-\item \textbf{Error response:} ``ERROR: Booking ID not found!''
-\end{itemize}
-
-\item \textbf{Movie code (seat map)}
-\begin{itemize}
-\item \textbf{Where entered:} Display Seating Map
-\item \textbf{Data type and size:} unsigned byte
-\item \textbf{Valid range:} 1 to 3
-\item \textbf{Validation rule:} 1 to 3 only
-\item \textbf{Error response:} show a movie code error and re-prompt
-\end{itemize}
-
-\end{enumerate}
+\begin{table}[H]
+\centering
+\footnotesize\setstretch{1.15}
+\caption{Input analysis}
+\label{tab:input}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{2.1cm}|>{\raggedright\arraybackslash}p{1.6cm}|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{1.4cm}|>{\raggedright\arraybackslash}p{2.9cm}|>{\raggedright\arraybackslash}p{2.7cm}|}
+\hline
+\textbf{Input} & \textbf{Where entered} & \textbf{Data type and size} & \textbf{Valid range} & \textbf{Validation rule} & \textbf{Error response} \\
+\hline
+\textbf{Menu choice} & Main menu & Unsigned byte & 1 to 6 & Must be an integer from 1 to 6 & Show ``Invalid choice'' and redisplay the menu \\
+\hline
+\textbf{Customer name} & Book New Ticket & ASCII string, 1 byte per character, stored in a 21-byte field (20 characters plus a null terminator) & 1--20 characters & Must not be empty and must not exceed 20 characters & Show a name error and re-prompt \\
+\hline
+\textbf{Booking ID (new)} & Book New Ticket & Unsigned doubleword & 100000--999999 & Must be exactly six digits in range, and must not match the ID of any \textbf{active} record & Out of range, re-prompt; duplicate, ``ERROR: Booking ID already exists!'' \\
+\hline
+\textbf{Movie code} & Book New Ticket & Unsigned byte & 1 to 3 & 1 = Movie A, 2 = Movie B, 3 = Movie C & Show a movie code error and re-prompt \\
+\hline
+\textbf{Seat number} & Book New Ticket & Unsigned byte & 1 to 20 & Must be in range \textbf{and} currently free in the seat map of the chosen movie & Out of range, re-prompt; taken, ``ERROR: Seat already reserved!'' \\
+\hline
+\textbf{Ticket category} & Book New Ticket & Unsigned byte & 1 to 3 & 1 = Adult, 2 = Student, 3 = Child & Show a category error and re-prompt \\
+\hline
+\textbf{Booking ID (cancel)} & Cancel Booking & Unsigned doubleword & 100000--999999 & Must match an \textbf{active} record & ``ERROR: Booking ID not found!'' \\
+\hline
+\textbf{Booking ID (display)} & Display Ticket & Unsigned doubleword & 100000--999999 & Must match an \textbf{active} record & ``ERROR: Booking ID not found!'' \\
+\hline
+\textbf{Movie code (seat map)} & Display Seating Map & Unsigned byte & 1 to 3 & 1 to 3 only & Show a movie code error and re-prompt \\
+\hline
+\end{tabular}
+\end{table}
 
 \subsection*{Why these data sizes}
 
-The sizes above follow directly from the integer storage sizes studied in Chapter One:
+The sizes above follow directly from the integer storage sizes studied in Chapter One of the course:
 
 \begin{itemize}
 \item A \textbf{byte} stores an unsigned value from \textbf{0 to 255}. This covers the menu choice (1 to 6), the movie code (1 to 3), the seat number (1 to 20), the ticket category (1 to 3) and the active flag (0 or 1) with a large margin, so a byte is the correct and cheapest choice for all five.
 \item A \textbf{word} stores an unsigned value from \textbf{0 to 65,535}. This is \textbf{too small for a booking ID}, because the largest legal ID, 999,999, is far beyond 65,535 and would overflow the field.
 \item A \textbf{doubleword} stores an unsigned value from \textbf{0 to 4,294,967,295}, which holds any six-digit booking ID comfortably. Prices and revenue totals are also kept in doublewords so that all arithmetic operands share one width.
-\item The customer name is stored as \textbf{ASCII characters, one byte per character}, as covered in the character-storage topic of Chapter One. The name field is 21 bytes: 20 character codes plus one byte for the terminating null that marks the end of the string.
+\item The customer name is stored as \textbf{ASCII characters, one byte per character}, as covered in the character-storage topic of Chapter One of the course. The name field is 21 bytes: 20 character codes plus one byte for the terminating null that marks the end of the string.
 \end{itemize}
 
 \subsection*{Stored inputs and transient inputs}
 
 The width of an input is decided by the range of values it must hold, and nothing else. A value is never given a wider field just because it is typed at the keyboard.
 
-Four of the nine inputs are \textbf{stored}: the customer name, the booking ID, the movie code, the seat number and the ticket category are written into a booking record and must stay there for the life of the booking. Their widths add up to the record size, so every byte counts.
+Five of the nine inputs are \textbf{stored}: the customer name, the booking ID, the movie code, the seat number and the ticket category are written into a booking record and must stay there for the life of the booking. Their widths add up to the record size, so every byte counts.
 
 The remaining inputs are \textbf{transient}. The menu choice, the booking ID used to cancel or to display a ticket, and the movie code used to pick a seating map are read, checked, acted upon and then discarded. None of them occupies space in a record. Even so, each is sized by its own range: the menu choice and the seat-map movie code fit in a byte, while a transient booking ID still needs a doubleword, because 999,999 overflows a word no matter how briefly the value is held.
 
@@ -161,81 +228,39 @@ Every numeric prompt (menu choice, booking ID, seat number, movie code, ticket c
 
 All output is formatted console text. Each output is produced on demand from the data currently held in memory; nothing is written to a file.
 
-\begin{enumerate}
+\begin{table}[H]
+\centering
+\footnotesize\setstretch{1.15}
+\caption{Output analysis}
+\label{tab:output}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{5.4cm}|>{\raggedright\arraybackslash}p{2.8cm}|}
+\hline
+\textbf{Output} & \textbf{Trigger} & \textbf{Format} & \textbf{Data source} \\
+\hline
+\textbf{Main menu} & Program start and after every completed operation & Banner line, six numbered options, input prompt & Fixed text \\
+\hline
+\textbf{Input prompts} & During every operation & One short line per field, stating the legal range & Fixed text \\
+\hline
+\textbf{Booking confirmation} & A booking is accepted & \texttt{Booking added successfully!} followed by \texttt{Final Ticket Price: n JOD} & Final price just calculated \\
+\hline
+\textbf{Formatted ticket} & Menu option 3 with a valid active ID & Banner, customer name, booking ID, movie, seat, category, base price, discount, separator line, final price & One active booking record \\
+\hline
+\textbf{Seating map} & Menu option 4 with a valid movie code & Title, legend \texttt{[O] Available [X] Reserved}, 4 rows of 5 seats, reserved count, occupancy percentage & Seat map of the selected movie \\
+\hline
+\textbf{Per-movie statistics} & Menu option 5 & One line per movie: bookings, revenue in JOD, occupancy percentage & Per-movie counters and revenue totals \\
+\hline
+\textbf{Overall totals} & Menu option 5 & Total active bookings, overall revenue, average ticket price & Totals accumulated over the active records \\
+\hline
+\textbf{Most and least booked movie} & Menu option 5 & Two labelled lines naming one movie each & The three per-movie booking counts \\
+\hline
+\textbf{Category histogram} & Menu option 5 & One row per category, a run of asterisks, and the count in brackets & The three category counters \\
+\hline
+\textbf{Error messages} & Any failed validation & A single line beginning \texttt{ERROR:} where specified, otherwise a short explanatory line, followed by a re-prompt & Fixed text \\
+\hline
+\end{tabular}
+\end{table}
 
-\item \textbf{Main menu}
-\begin{itemize}
-\item \textbf{Trigger:} program start and after every completed operation
-\item \textbf{Format:} banner line, six numbered options, input prompt
-\item \textbf{Data source:} fixed text
-\end{itemize}
-
-\item \textbf{Input prompts}
-\begin{itemize}
-\item \textbf{Trigger:} during every operation
-\item \textbf{Format:} one short line per field, stating the legal range
-\item \textbf{Data source:} fixed text
-\end{itemize}
-
-\item \textbf{Booking confirmation}
-\begin{itemize}
-\item \textbf{Trigger:} a booking is accepted
-\item \textbf{Format:} \texttt{Booking added successfully!} followed by \texttt{Final Ticket Price: n JOD}
-\item \textbf{Data source:} final price just calculated
-\end{itemize}
-
-\item \textbf{Formatted ticket}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 3 with a valid active ID
-\item \textbf{Format:} banner, customer name, booking ID, movie, seat, category, base price, discount, separator line, final price
-\item \textbf{Data source:} one active booking record
-\end{itemize}
-
-\item \textbf{Seating map}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 4 with a valid movie code
-\item \textbf{Format:} title, legend \texttt{[O] Available [X] Reserved}, 4 rows of 5 seats, reserved count, occupancy percentage
-\item \textbf{Data source:} seat map of the selected movie
-\end{itemize}
-
-\item \textbf{Per-movie statistics}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 5
-\item \textbf{Format:} one line per movie: bookings, revenue in JOD, occupancy percentage
-\item \textbf{Data source:} per-movie counters and revenue totals
-\end{itemize}
-
-\item \textbf{Overall totals}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 5
-\item \textbf{Format:} total active bookings, overall revenue, average ticket price
-\item \textbf{Data source:} totals accumulated over the active records
-\end{itemize}
-
-\item \textbf{Most and least booked movie}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 5
-\item \textbf{Format:} two labelled lines naming one movie each
-\item \textbf{Data source:} the three per-movie booking counts
-\end{itemize}
-
-\item \textbf{Category histogram}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 5
-\item \textbf{Format:} one row per category, a run of asterisks, and the count in brackets
-\item \textbf{Data source:} the three category counters
-\end{itemize}
-
-\item \textbf{Error messages}
-\begin{itemize}
-\item \textbf{Trigger:} any failed validation
-\item \textbf{Format:} a single line beginning \texttt{ERROR:} where specified, otherwise a short explanatory line, followed by a re-prompt
-\item \textbf{Data source:} fixed text
-\end{itemize}
-
-\end{enumerate}
-
-All ten outputs are plain console text produced through \textbf{library calls}, which is the highest of the four input-output levels studied in Chapter Two. The program does not call BIOS routines and does not address hardware ports directly. This is what keeps the program portable across lab machines, and it is the reason graphics, colour control and printer output are excluded from the project scope.
+All ten outputs are plain console text produced through \textbf{library calls}, which is the highest of the four input-output levels studied in Chapter Two of the course. The program does not call BIOS routines and does not address hardware ports directly. This is what keeps the program portable across lab machines, and it is the reason graphics, colour control and printer output are excluded from the project scope.
 
 \section{Process Flow}
 
@@ -313,7 +338,7 @@ Every figure in the report is recalculated from the records at the moment the op
 
 \subsection{Note on the repeated structures}
 
-Three of the four flows above repeat an action a known number of times over a fixed array: the duplicate-ID check and the record scan both sweep 60 record slots, and the seating map prints 20 seats. Chapter Two identified CX as the processor's dedicated counter register, used by default for counted repetition, so the problem's shape fits that register naturally. The validation branches are different in kind: each one repeats \textit{until} the user supplies an acceptable value, so the number of repetitions is not known in advance. The project therefore requires both a counted repetition and a condition-controlled repetition, which satisfies the requirement for at least two loop structures.
+Three of the four flows above repeat an action a known number of times over a fixed array: the duplicate-ID check and the record scan both sweep 60 record slots, and the seating map prints 20 seats. Chapter Two of the course identified CX as the processor's dedicated counter register, used by default for counted repetition, so the problem's shape fits that register naturally. The validation branches are different in kind: each one repeats \textit{until} the user supplies an acceptable value, so the number of repetitions is not known in advance. The project therefore requires both a counted repetition and a condition-controlled repetition, which satisfies the requirement for at least two loop structures.
 
 \section{Constraints}
 
@@ -350,7 +375,7 @@ The 37-byte record is made up of a 21-byte name field (20 characters plus a null
 
 \subsection{Registers against memory}
 
-Chapter Two established that a processor has only a small, fixed set of registers, that they are fast but temporary, and that program data lives in main memory. CTRMS holds roughly 2.3 KB of state, so the records, the seat maps and the counters must all live in memory. Registers can only ever hold what is being worked on at that instant: the current array index, a loop counter, an address, or the result of one arithmetic step. This is the reason the system is built around arrays indexed by position rather than around values kept permanently in registers.
+Chapter Two of the course established that a processor has only a small, fixed set of registers, that they are fast but temporary, and that program data lives in main memory. CTRMS holds roughly 2.3 KB of state, so the records, the seat maps and the counters must all live in memory. Registers can only ever hold what is being worked on at that instant: the current array index, a loop counter, an address, or the result of one arithmetic step. This is the reason the system is built around arrays indexed by position rather than around values kept permanently in registers.
 
 \subsection{Capacity}
 
@@ -364,7 +389,7 @@ Chapter Two established that a processor has only a small, fixed set of register
 
 \subsection{Integer arithmetic}
 
-The processor does provide floating-point registers, as covered in Chapter Two, but the project specification forbids floating-point instructions. Every calculation is therefore integer arithmetic, with these consequences:
+The processor does provide floating-point registers, as covered in Chapter Two of the course, but the project specification forbids floating-point instructions. Every calculation is therefore integer arithmetic, with these consequences:
 
 \begin{itemize}
 \item \textbf{Prices are exact.} Base prices are 8, 7 and 6 JOD and discounts are 0, 1 and 2 JOD, so every final price is a whole number from 4 to 8 JOD. No rounding occurs.
@@ -382,12 +407,12 @@ Three range limits act as hard constraints on the design:
 \item The largest revenue the system can ever hold is 60 bookings at the top price of 8 JOD, which is \textbf{480 JOD}. This is nowhere near the doubleword limit, so no overflow handling is needed for any total.
 \end{enumerate}
 
-Every quantity in the system (identifiers, counts, prices, revenue, percentages) is non-negative. All values are therefore treated as unsigned, and the two's-complement representation of negative numbers studied in Chapter One does not arise anywhere in this project.
+Every quantity in the system (identifiers, counts, prices, revenue, percentages) is non-negative. All values are therefore treated as unsigned, and the two's-complement representation of negative numbers studied in Chapter One of the course does not arise anywhere in this project.
 
 \subsection{Platform and course constraints}
 
 \begin{itemize}
-\item The program is written in x86 assembly for \textbf{MASM with the Irvine32 library}, and runs as a 32-bit Windows console application in \textbf{protected mode}, the native mode described in Chapter Two.
+\item The program is written in x86 assembly for \textbf{MASM with the Irvine32 library}, and runs as a 32-bit Windows console application in \textbf{protected mode}, the native mode described in Chapter Two of the course.
 \item There is \textbf{no persistence}. All records live in memory only, so every booking is lost when the program exits.
 \item The program is \textbf{console only}. There is no graphical interface, no mouse input and no printing.
 \item The course imposes its own requirements that shape the design: at least \textbf{8 procedures}, at least \textbf{2 different loop structures}, IF, IF-ELSE and nested conditionals, and the use of all five required data types: strings, doublewords, bytes, characters and arrays.
@@ -409,23 +434,9 @@ Every quantity in the system (identifiers, counts, prices, revenue, percentages)
 \item \textbf{All lab machines behave identically.} Every machine runs the same MASM and Irvine32 setup in protected mode, so no machine-specific behaviour is relied upon.
 \end{enumerate}
 
-\clearpage
+% ── Chapter 3: Requirements Specification ──
 
-% ---------- Change header and numbering for Chapter Three ----------
-\fancyhead[C]{\bfseries Chapter Three: Requirements Specification}
-\renewcommand{\thesection}{3.\arabic{section}}
-\renewcommand{\thesubsection}{3.\arabic{section}.\arabic{subsection}}
-\setcounter{section}{0}
-
-% ---------- Chapter-opening page ----------
-\thispagestyle{empty}
-\vspace*{\stretch{1}}
-\begin{center}
-{\Large\bfseries Chapter Three}\\[1em]
-{\Large\bfseries Requirements Specification}
-\end{center}
-\vspace*{\stretch{2}}
-\clearpage
+\printchaptertitle{Requirements Specification}
 
 \section{Functional Requirements}
 
@@ -494,7 +505,7 @@ The specified requirements directly support the Course Learning Outcomes (CLOs) 
 \begin{itemize}
     \item \textbf{S1: Develop assembly language programs for microcomputers to perform basic input/output operations.}
     \begin{itemize}
-        \item \textbf{Mapping:} Supported by FR01, FR07, FR08, and FR09. The system fulfills this outcome by prompting the user for input, executing validation loops, and rendering highly formatted reports (menus, tickets, seating maps, and histograms) directly to the console[cite: 13].
+        \item \textbf{Mapping:} Supported by FR01, FR07, FR08, and FR09. The system fulfills this outcome by prompting the user for input, executing validation loops, and rendering highly formatted reports (menus, tickets, seating maps, and histograms) directly to the console.
     \end{itemize}
     
     \item \textbf{S2: Implement and debug assembly language programs that perform arithmetic, string operations, searching, and memory manipulation tasks.}
