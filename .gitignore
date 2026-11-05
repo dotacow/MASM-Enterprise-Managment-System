@@ -53,3 +53,25 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# LaTeX auxiliary and log files
+*.aux
+*.log
+*.out
+
+# latexmk tracking files
+*.fdb_latexmk
+*.fls
+
+# SyncTeX navigation files
+*.synctex.gz
+*.synctex(busy)
+
+# Table of contents and lists (if added later)
+*.toc
+*.lof
+*.lot
+
+# Bibliography and citations (if added later)
+*.bbl
+*.blg
