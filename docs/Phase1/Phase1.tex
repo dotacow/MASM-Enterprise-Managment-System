@@ -1,6 +1,7 @@
 % University: Applied Science Private University
 
 \documentclass{thesis-library}
+\usepackage{array}
 
 \begin{document}
 
@@ -161,90 +162,35 @@ The project will be judged complete when all of the criteria in Table~\ref{tab:s
 
 The system reads input only from the console keyboard. There is no file input, no network input and no stored configuration. Nine distinct inputs exist across the six menu options.
 
-\begin{enumerate}
-
-\item \textbf{Menu choice}
-\begin{itemize}
-\item \textbf{Where entered:} main menu
-\item \textbf{Data type and size:} unsigned byte
-\item \textbf{Valid range:} 1 to 6
-\item \textbf{Validation rule:} must be an integer from 1 to 6
-\item \textbf{Error response:} show ``Invalid choice'' and redisplay the menu
-\end{itemize}
-
-\item \textbf{Customer name}
-\begin{itemize}
-\item \textbf{Where entered:} Book New Ticket
-\item \textbf{Data type and size:} ASCII string, 1 byte per character, stored in a 21-byte field (20 characters plus a null terminator)
-\item \textbf{Valid range:} 1--20 characters
-\item \textbf{Validation rule:} must not be empty and must not exceed 20 characters
-\item \textbf{Error response:} show a name error and re-prompt
-\end{itemize}
-
-\item \textbf{Booking ID (new)}
-\begin{itemize}
-\item \textbf{Where entered:} Book New Ticket
-\item \textbf{Data type and size:} unsigned doubleword
-\item \textbf{Valid range:} 100000--999999
-\item \textbf{Validation rule:} must be exactly six digits in range, and must not match the ID of any \textbf{active} record
-\item \textbf{Error response:} out of range, re-prompt; duplicate, ``ERROR: Booking ID already exists!''
-\end{itemize}
-
-\item \textbf{Movie code}
-\begin{itemize}
-\item \textbf{Where entered:} Book New Ticket
-\item \textbf{Data type and size:} unsigned byte
-\item \textbf{Valid range:} 1 to 3
-\item \textbf{Validation rule:} 1 = Movie A, 2 = Movie B, 3 = Movie C
-\item \textbf{Error response:} show a movie code error and re-prompt
-\end{itemize}
-
-\item \textbf{Seat number}
-\begin{itemize}
-\item \textbf{Where entered:} Book New Ticket
-\item \textbf{Data type and size:} unsigned byte
-\item \textbf{Valid range:} 1 to 20
-\item \textbf{Validation rule:} must be in range \textbf{and} currently free in the seat map of the chosen movie
-\item \textbf{Error response:} out of range, re-prompt; taken, ``ERROR: Seat already reserved!''
-\end{itemize}
-
-\item \textbf{Ticket category}
-\begin{itemize}
-\item \textbf{Where entered:} Book New Ticket
-\item \textbf{Data type and size:} unsigned byte
-\item \textbf{Valid range:} 1 to 3
-\item \textbf{Validation rule:} 1 = Adult, 2 = Student, 3 = Child
-\item \textbf{Error response:} show a category error and re-prompt
-\end{itemize}
-
-\item \textbf{Booking ID (cancel)}
-\begin{itemize}
-\item \textbf{Where entered:} Cancel Booking
-\item \textbf{Data type and size:} unsigned doubleword
-\item \textbf{Valid range:} 100000--999999
-\item \textbf{Validation rule:} must match an \textbf{active} record
-\item \textbf{Error response:} ``ERROR: Booking ID not found!''
-\end{itemize}
-
-\item \textbf{Booking ID (display)}
-\begin{itemize}
-\item \textbf{Where entered:} Display Ticket
-\item \textbf{Data type and size:} unsigned doubleword
-\item \textbf{Valid range:} 100000--999999
-\item \textbf{Validation rule:} must match an \textbf{active} record
-\item \textbf{Error response:} ``ERROR: Booking ID not found!''
-\end{itemize}
-
-\item \textbf{Movie code (seat map)}
-\begin{itemize}
-\item \textbf{Where entered:} Display Seating Map
-\item \textbf{Data type and size:} unsigned byte
-\item \textbf{Valid range:} 1 to 3
-\item \textbf{Validation rule:} 1 to 3 only
-\item \textbf{Error response:} show a movie code error and re-prompt
-\end{itemize}
-
-\end{enumerate}
+\begin{table}[H]
+\centering
+\footnotesize\setstretch{1.15}
+\caption{Input analysis}
+\label{tab:input}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{2.1cm}|>{\raggedright\arraybackslash}p{1.6cm}|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{1.4cm}|>{\raggedright\arraybackslash}p{2.9cm}|>{\raggedright\arraybackslash}p{2.7cm}|}
+\hline
+\textbf{Input} & \textbf{Where entered} & \textbf{Data type and size} & \textbf{Valid range} & \textbf{Validation rule} & \textbf{Error response} \\
+\hline
+\textbf{Menu choice} & Main menu & Unsigned byte & 1 to 6 & Must be an integer from 1 to 6 & Show ``Invalid choice'' and redisplay the menu \\
+\hline
+\textbf{Customer name} & Book New Ticket & ASCII string, 1 byte per character, stored in a 21-byte field (20 characters plus a null terminator) & 1--20 characters & Must not be empty and must not exceed 20 characters & Show a name error and re-prompt \\
+\hline
+\textbf{Booking ID (new)} & Book New Ticket & Unsigned doubleword & 100000--999999 & Must be exactly six digits in range, and must not match the ID of any \textbf{active} record & Out of range, re-prompt; duplicate, ``ERROR: Booking ID already exists!'' \\
+\hline
+\textbf{Movie code} & Book New Ticket & Unsigned byte & 1 to 3 & 1 = Movie A, 2 = Movie B, 3 = Movie C & Show a movie code error and re-prompt \\
+\hline
+\textbf{Seat number} & Book New Ticket & Unsigned byte & 1 to 20 & Must be in range \textbf{and} currently free in the seat map of the chosen movie & Out of range, re-prompt; taken, ``ERROR: Seat already reserved!'' \\
+\hline
+\textbf{Ticket category} & Book New Ticket & Unsigned byte & 1 to 3 & 1 = Adult, 2 = Student, 3 = Child & Show a category error and re-prompt \\
+\hline
+\textbf{Booking ID (cancel)} & Cancel Booking & Unsigned doubleword & 100000--999999 & Must match an \textbf{active} record & ``ERROR: Booking ID not found!'' \\
+\hline
+\textbf{Booking ID (display)} & Display Ticket & Unsigned doubleword & 100000--999999 & Must match an \textbf{active} record & ``ERROR: Booking ID not found!'' \\
+\hline
+\textbf{Movie code (seat map)} & Display Seating Map & Unsigned byte & 1 to 3 & 1 to 3 only & Show a movie code error and re-prompt \\
+\hline
+\end{tabular}
+\end{table}
 
 \subsection*{Why these data sizes}
 
@@ -282,79 +228,37 @@ Every numeric prompt (menu choice, booking ID, seat number, movie code, ticket c
 
 All output is formatted console text. Each output is produced on demand from the data currently held in memory; nothing is written to a file.
 
-\begin{enumerate}
-
-\item \textbf{Main menu}
-\begin{itemize}
-\item \textbf{Trigger:} program start and after every completed operation
-\item \textbf{Format:} banner line, six numbered options, input prompt
-\item \textbf{Data source:} fixed text
-\end{itemize}
-
-\item \textbf{Input prompts}
-\begin{itemize}
-\item \textbf{Trigger:} during every operation
-\item \textbf{Format:} one short line per field, stating the legal range
-\item \textbf{Data source:} fixed text
-\end{itemize}
-
-\item \textbf{Booking confirmation}
-\begin{itemize}
-\item \textbf{Trigger:} a booking is accepted
-\item \textbf{Format:} \texttt{Booking added successfully!} followed by \texttt{Final Ticket Price: n JOD}
-\item \textbf{Data source:} final price just calculated
-\end{itemize}
-
-\item \textbf{Formatted ticket}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 3 with a valid active ID
-\item \textbf{Format:} banner, customer name, booking ID, movie, seat, category, base price, discount, separator line, final price
-\item \textbf{Data source:} one active booking record
-\end{itemize}
-
-\item \textbf{Seating map}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 4 with a valid movie code
-\item \textbf{Format:} title, legend \texttt{[O] Available [X] Reserved}, 4 rows of 5 seats, reserved count, occupancy percentage
-\item \textbf{Data source:} seat map of the selected movie
-\end{itemize}
-
-\item \textbf{Per-movie statistics}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 5
-\item \textbf{Format:} one line per movie: bookings, revenue in JOD, occupancy percentage
-\item \textbf{Data source:} per-movie counters and revenue totals
-\end{itemize}
-
-\item \textbf{Overall totals}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 5
-\item \textbf{Format:} total active bookings, overall revenue, average ticket price
-\item \textbf{Data source:} totals accumulated over the active records
-\end{itemize}
-
-\item \textbf{Most and least booked movie}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 5
-\item \textbf{Format:} two labelled lines naming one movie each
-\item \textbf{Data source:} the three per-movie booking counts
-\end{itemize}
-
-\item \textbf{Category histogram}
-\begin{itemize}
-\item \textbf{Trigger:} menu option 5
-\item \textbf{Format:} one row per category, a run of asterisks, and the count in brackets
-\item \textbf{Data source:} the three category counters
-\end{itemize}
-
-\item \textbf{Error messages}
-\begin{itemize}
-\item \textbf{Trigger:} any failed validation
-\item \textbf{Format:} a single line beginning \texttt{ERROR:} where specified, otherwise a short explanatory line, followed by a re-prompt
-\item \textbf{Data source:} fixed text
-\end{itemize}
-
-\end{enumerate}
+\begin{table}[H]
+\centering
+\footnotesize\setstretch{1.15}
+\caption{Output analysis}
+\label{tab:output}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{5.4cm}|>{\raggedright\arraybackslash}p{2.8cm}|}
+\hline
+\textbf{Output} & \textbf{Trigger} & \textbf{Format} & \textbf{Data source} \\
+\hline
+\textbf{Main menu} & Program start and after every completed operation & Banner line, six numbered options, input prompt & Fixed text \\
+\hline
+\textbf{Input prompts} & During every operation & One short line per field, stating the legal range & Fixed text \\
+\hline
+\textbf{Booking confirmation} & A booking is accepted & \texttt{Booking added successfully!} followed by \texttt{Final Ticket Price: n JOD} & Final price just calculated \\
+\hline
+\textbf{Formatted ticket} & Menu option 3 with a valid active ID & Banner, customer name, booking ID, movie, seat, category, base price, discount, separator line, final price & One active booking record \\
+\hline
+\textbf{Seating map} & Menu option 4 with a valid movie code & Title, legend \texttt{[O] Available [X] Reserved}, 4 rows of 5 seats, reserved count, occupancy percentage & Seat map of the selected movie \\
+\hline
+\textbf{Per-movie statistics} & Menu option 5 & One line per movie: bookings, revenue in JOD, occupancy percentage & Per-movie counters and revenue totals \\
+\hline
+\textbf{Overall totals} & Menu option 5 & Total active bookings, overall revenue, average ticket price & Totals accumulated over the active records \\
+\hline
+\textbf{Most and least booked movie} & Menu option 5 & Two labelled lines naming one movie each & The three per-movie booking counts \\
+\hline
+\textbf{Category histogram} & Menu option 5 & One row per category, a run of asterisks, and the count in brackets & The three category counters \\
+\hline
+\textbf{Error messages} & Any failed validation & A single line beginning \texttt{ERROR:} where specified, otherwise a short explanatory line, followed by a re-prompt & Fixed text \\
+\hline
+\end{tabular}
+\end{table}
 
 All ten outputs are plain console text produced through \textbf{library calls}, which is the highest of the four input-output levels studied in Chapter Two of the course. The program does not call BIOS routines and does not address hardware ports directly. This is what keeps the program portable across lab machines, and it is the reason graphics, colour control and printer output are excluded from the project scope.
 
