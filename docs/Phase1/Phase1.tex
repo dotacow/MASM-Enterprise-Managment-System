@@ -409,4 +409,103 @@ Every quantity in the system (identifiers, counts, prices, revenue, percentages)
 \item \textbf{All lab machines behave identically.} Every machine runs the same MASM and Irvine32 setup in protected mode, so no machine-specific behaviour is relied upon.
 \end{enumerate}
 
+\clearpage
+
+% ---------- Change header and numbering for Chapter Three ----------
+\fancyhead[C]{\bfseries Chapter Three: Requirements Specification}
+\renewcommand{\thesection}{3.\arabic{section}}
+\renewcommand{\thesubsection}{3.\arabic{section}.\arabic{subsection}}
+\setcounter{section}{0}
+
+% ---------- Chapter-opening page ----------
+\thispagestyle{empty}
+\vspace*{\stretch{1}}
+\begin{center}
+{\Large\bfseries Chapter Three}\\[1em]
+{\Large\bfseries Requirements Specification}
+\end{center}
+\vspace*{\stretch{2}}
+\clearpage
+
+\section{Functional Requirements}
+
+The system must fulfill the following functional requirements to meet the project objectives. Priorities are classified as High (H), Medium (M), or Low (L).
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements}
+\label{tab:func-req}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{0.1\linewidth}|p{0.75\linewidth}|p{0.05\linewidth}|}
+\hline
+\textbf{ID} & \textbf{Description} & \textbf{Pri} \\
+\hline
+FR01 & The system shall display a main menu with six options: Book, Cancel, Display Ticket, Display Seating Map, Statistics, and Exit.& H \\
+\hline
+FR02 & The system shall record new ticket bookings by accepting Customer Name, Booking ID, Movie Code, Seat Number, and Ticket Category. & H \\
+\hline
+FR03 & The system shall validate that the 6-digit Booking ID is unique and falls between 100000 and 999999. & H \\
+\hline
+FR04 & The system shall calculate final ticket prices by subtracting the applicable ticket category discount from the movie's base price. & H \\
+\hline
+FR05 & The system shall prevent duplicate seat reservations for the same movie hall. & H \\
+\hline
+FR06 & The system shall deactivate a booking and release its seat when a user cancels an active booking using its ID. & H \\
+\hline
+FR07 & The system shall format and display an individual ticket, including all pricing and discount details, when provided a valid active Booking ID. & M \\
+\hline
+FR08 & The system shall output a visual seating map for a specified movie, indicating available seats with \texttt{[O]} and reserved seats with \texttt{[X]}. & M \\
+\hline
+FR09 & The system shall calculate and display revenue statistics, total bookings, occupancy percentages, and a ticket category distribution histogram. & M \\
+\hline
+FR10 & The system shall restrict total active bookings to a maximum capacity of 60 reservations across the three movies. & H \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Non-Functional Requirements}
+
+The following constraints define the technical environment, structural quality, and architectural standards of the system.
+
+\begin{table}[H]
+\centering
+\caption{Non-Functional Requirements}
+\label{tab:non-func-req}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{0.09\linewidth}|p{0.82\linewidth}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+NFR01 & The software shall be implemented entirely in x86 Assembly Language using MASM. \\
+\hline
+NFR02 & The software shall utilize the Irvine32 library for all console input/output and string formatting operations. \\
+\hline
+NFR03 & The software shall rely exclusively on integer arithmetic for all pricing and statistical calculations; floating-point instructions are strictly forbidden. \\
+\hline
+NFR04 & The software shall use fixed-size memory records and arrays to manage the state of the up to 60 active booking entries. \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{CLO Mapping}
+
+The specified requirements directly support the Course Learning Outcomes (CLOs) as defined in the project structure:
+
+\begin{itemize}
+    \item \textbf{S1: Develop assembly language programs for microcomputers to perform basic input/output operations.}
+    \begin{itemize}
+        \item \textbf{Mapping:} Supported by FR01, FR07, FR08, and FR09. The system fulfills this outcome by prompting the user for input, executing validation loops, and rendering highly formatted reports (menus, tickets, seating maps, and histograms) directly to the console[cite: 13].
+    \end{itemize}
+    
+    \item \textbf{S2: Implement and debug assembly language programs that perform arithmetic, string operations, searching, and memory manipulation tasks.}
+    \begin{itemize}
+        \item \textbf{Mapping:} Supported by FR02, FR04, FR06, and NFR04. The logic explicitly requires iterating over arrays to perform searches (booking IDs, seat availability), reading strings (customer names), and executing integer arithmetic to calculate ticket pricing and cumulative statistics.
+    \end{itemize}
+
+    \item \textbf{C1: Distinguish between different processor registers and use them appropriately in assembly language programming.}
+    \begin{itemize}
+        \item \textbf{Mapping:} Supported by NFR01 and NFR03. The implementation mandates correct assignment and management of general-purpose registers (EAX, EBX, ECX, EDX, ESI, EDI) according to standard architectural conventions for calculations, pointers, loop counting, and library parameter passing.
+    \end{itemize}
+\end{itemize}
+
 \end{document}
