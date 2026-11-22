@@ -1,0 +1,34 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {CalculateStatistics};
+\node[proc,below=of s] (c) {Clear movieCounts, movieRevenue, categoryCounts (REP STOSD)};
+\node[proc,below=of c] (i) {ESI $\leftarrow$ OFFSET bookings; ECX $\leftarrow$ 60};
+\node[dec,below=of i] (d1) {[ESI].activeFlag = 1?};
+\node[proc,right=10mm of d1,text width=40mm] (u) {m $\leftarrow$ movieCode $-$ 1; c $\leftarrow$ category $-$ 1\\ movieCounts[m] + 1\\ movieRevenue[m] + finalPrice\\ categoryCounts[c] + 1};
+\node[proc,below=of d1] (n) {ESI $\leftarrow$ ESI + 37};
+\node[dec,below=of n] (l) {LOOP: ECX $-$ 1 $\neq$ 0?};
+\node[proc,below=of l] (o) {For each movie: occupancy $\leftarrow$ count $\times$ 100 $\div$ 20; totalRevenue $\leftarrow$ sum of revenue};
+\node[dec,below=of o] (d2) {activeCount > 0?};
+\node[proc,right=10mm of d2] (av) {averagePrice $\leftarrow$ totalRevenue $\div$ activeCount};
+\node[proc,left=10mm of d2] (z) {averagePrice $\leftarrow$ 0 (no divide)};
+\node[proc,below=of d2] (m) {mostBooked $\leftarrow$ highest count, leastBooked $\leftarrow$ lowest count (ties keep earlier movie)};
+\node[term,below=of m] (e) {Return};
+\draw[go] (s)--(c);
+\draw[go] (c)--(i);
+\draw[go] (i)--(d1);
+\draw[go] (d1)--node[lab]{Yes}(u);
+\draw[go] (u)|-(n.east);
+\draw[go] (d1)--node[lab]{No}(n);
+\draw[go] (n)--(l);
+\draw[go] (l.west)--node[lab,pos=.3]{Yes}++(-8mm,0)|-([yshift=1.5mm]d1.north);
+\draw[go] (l)--node[lab]{No}(o);
+\draw[go] (o)--(d2);
+\draw[go] (d2)--node[lab]{Yes}(av);
+\draw[go] (d2)--node[lab]{No}(z);
+\draw[go] (av)|-(m.east);
+\draw[go] (z)|-(m.west);
+\draw[go] (m)--(e);
+\end{tikzpicture}
+\end{document}

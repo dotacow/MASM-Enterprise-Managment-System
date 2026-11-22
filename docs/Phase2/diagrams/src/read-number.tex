@@ -1,0 +1,28 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {ReadNumber (EDX = prompt)};
+\node[io,below=of s] (p) {Print prompt; ReadString into inputBuffer; EAX = length};
+\node[dec,below=of p] (d1) {Length 1 to 6?};
+\node[term,right=10mm of d1] (bad1) {CF $\leftarrow$ 1, return (invalid)};
+\node[proc,below=of d1] (z) {value $\leftarrow$ 0; ESI $\leftarrow$ OFFSET inputBuffer};
+\node[dec,below=of z] (d2) {Byte at ESI = 0 (end of string)?};
+\node[term,left=8mm of d2] (ok) {EAX $\leftarrow$ value, CF $\leftarrow$ 0, return (valid)};
+\node[dec,below=of d2] (d3) {Byte between `0' and `9'?};
+\node[term,right=10mm of d3] (bad2) {CF $\leftarrow$ 1, return (invalid)};
+\node[proc,below=of d3] (acc) {value $\leftarrow$ value $\times$ 10 + (byte $-$ `0')};
+\node[proc,below=of acc] (inc) {ESI $\leftarrow$ ESI + 1};
+\draw[go] (s)--(p);
+\draw[go] (p)--(d1);
+\draw[go] (d1)--node[lab]{No}(bad1);
+\draw[go] (d1)--node[lab]{Yes}(z);
+\draw[go] (z)--(d2);
+\draw[go] (d2)--node[lab]{Yes}(ok);
+\draw[go] (d2)--node[lab]{No}(d3);
+\draw[go] (d3)--node[lab]{No}(bad2);
+\draw[go] (d3)--node[lab]{Yes}(acc);
+\draw[go] (acc)--(inc);
+\draw[go] (inc.west)--++(-12mm,0)|-($(d2.north)+(0,3mm)$);
+\end{tikzpicture}
+\end{document}

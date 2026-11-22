@@ -1,0 +1,25 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {ValidateSeat (EBX = movie code)};
+\node[io,below=of s] (r) {ReadNumber: read seat number};
+\node[dec,below=of r] (d1) {Digits only and 1 to 20?};
+\node[err,left=8mm of d1] (e1) {ERROR: Invalid seat number!};
+\node[sub,below=of d1] (g) {GetSeatAddress (EBX, EAX) $\rightarrow$ EDI};
+\node[dec,below=of g] (d2) {Byte at EDI = 1 (reserved)?};
+\node[err,left=8mm of d2] (e2) {ERROR: Seat already reserved!};
+\node[term,below=of d2] (ok) {Return EAX = free seat};
+\draw[go] (s)--(r);
+\draw[go] (r)--(d1);
+\draw[go] (d1)--node[lab]{No}(e1);
+\draw[go] (e1.north)|-(r.west);
+\draw[go] (d1)--node[lab]{Yes}(g);
+\draw[go] (g)--(d2);
+\draw[go] (d2)--node[lab]{Yes}(e2);
+\draw[go] (e2.west)--++(-4mm,0)|-([yshift=1.5mm]r.west);
+\draw[go] (d2)--node[lab]{No}(ok);
+\node[proc,text width=46mm,right=14mm of g,fill=white] (f) {EDI $\leftarrow$ OFFSET seatMaps\\ + (EBX $-$ 1) $\times$ 20\\ + (EAX $-$ 1)};
+\draw[dashed,draw=gray!55!black] (g)--(f);
+\end{tikzpicture}
+\end{document}

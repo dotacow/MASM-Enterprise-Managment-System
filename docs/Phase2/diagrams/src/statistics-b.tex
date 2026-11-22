@@ -1,0 +1,52 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {DisplayStatistics};
+\node[sub,below=of s] (c) {CalculateStatistics (Figure 10)};
+\node[io,below=of c] (b) {Print banner, BOOKING \& REVENUE STATISTICS, banner};
+\node[io,below=of b] (m) {For movies A to C: print bookings, revenue, occupancy};
+\node[io,below=of m] (t) {Print total active bookings, overall revenue, average price};
+\node[dec,below=of t] (d) {activeCount = 0?};
+\node[io,left=8mm of d] (no) {Print None for most and least booked};
+\node[sub,below=of d] (mv) {PrintMovieName (mostBooked), PrintMovieName (leastBooked)};
+\node[sub,below=of mv] (h) {DisplayHistogram};
+\node[io,below=of h] (bb) {Print closing banner};
+\node[term,below=of bb] (e) {Return to menu};
+\draw[go] (s)--(c);
+\draw[go] (c)--(b);
+\draw[go] (b)--(m);
+\draw[go] (m)--(t);
+\draw[go] (t)--(d);
+\draw[go] (d)--node[lab]{Yes}(no);
+\draw[go] (no)|-(h.west);
+\draw[go] (d)--node[lab]{No}(mv);
+\draw[go] (mv)--(h);
+\draw[go] (h)--(bb);
+\draw[go] (bb)--(e);
+% DisplayHistogram
+\node[term] (hs) at ($(s)+(80mm,0)$) {DisplayHistogram};
+\node[proc,below=of hs] (w) {width $\leftarrow$ largest categoryCounts; ECX $\leftarrow$ 3};
+\node[io,below=of w] (lb) {Print label (Adult, Student, Child)};
+\node[proc,below=of lb] (n) {n $\leftarrow$ categoryCounts[c]};
+\node[dec,below=of n] (dn) {n > 0?};
+\node[io,right=8mm of dn,text width=20mm] (st) {Print `*'; n $\leftarrow$ n $-$ 1};
+\node[io,below=of dn] (pd) {Print (width $-$ count + 2) spaces, then (count)};
+\node[dec,below=of pd] (lp) {LOOP: ECX $-$ 1 $\neq$ 0?};
+\node[term,below=of lp] (he) {Return};
+\draw[go] (hs)--(w);
+\draw[go] (w)--(lb);
+\draw[go] (lb)--(n);
+\draw[go] (n)--(dn);
+\draw[go] (dn)--node[lab]{Yes}(st);
+\draw[go] (st.north)|-([yshift=-1.5mm]n.east);
+\draw[go] (dn)--node[lab]{No}(pd);
+\draw[go] (pd)--(lp);
+\draw[go] (lp.west)--node[lab,pos=.3]{Yes}++(-8mm,0)|-(lb.west);
+\draw[go] (lp)--node[lab]{No}(he);
+\begin{scope}[on background layer]
+\node[frame,fit=(hs)(w)(lb)(n)(dn)(st)(pd)(lp)(he)] (box) {};
+\end{scope}
+\draw[go,dashed] (h.east)--node[lab,above]{CALL}(h.east -| box.west);
+\end{tikzpicture}
+\end{document}

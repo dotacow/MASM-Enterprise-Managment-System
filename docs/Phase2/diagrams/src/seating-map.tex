@@ -1,0 +1,40 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {DisplaySeatMap};
+\node[sub,below=of s] (v) {ValidateMovieCode $\rightarrow$ EBX = 1 to 3 (re-asks on error)};
+\node[io,below=of v] (t) {Print banner, MOVIE (`A' + EBX $-$ 1) - SEATING MAP, legend};
+\node[sub,below=of t] (g) {GetSeatAddress (EBX, 1) $\rightarrow$ EDI; seat $\leftarrow$ 1};
+\node[proc,below=of g] (o) {Outer: ECX $\leftarrow$ 4 rows};
+\node[proc,below=of o] (i) {PUSH ECX; inner: ECX $\leftarrow$ 5 seats};
+\node[dec,below=of i] (d1) {seat < 10?};
+\node[io,right=10mm of d1] (z) {Print `0'};
+\node[io,below=of d1] (p) {Print seat, `[', seatSymbols[byte at EDI], `]'};
+\node[proc,below=of p] (n) {seat $\leftarrow$ seat + 1; EDI $\leftarrow$ EDI + 1};
+\node[dec,below=of n] (l1) {LOOP: ECX $-$ 1 $\neq$ 0?};
+\node[proc,below=of l1] (nl) {Print new line; POP ECX};
+\node[dec,below=of nl] (l2) {LOOP: ECX $-$ 1 $\neq$ 0?};
+\node[sub,below=of l2] (c) {CountReservedSeats (EBX) $\rightarrow$ EAX};
+\node[io,below=of c] (r) {Print Reserved: EAX / 20 and Occupancy: EAX $\times$ 100 $\div$ 20 \%};
+\node[term,below=of r] (e) {Return to menu};
+\draw[go] (s)--(v);
+\draw[go] (v)--(t);
+\draw[go] (t)--(g);
+\draw[go] (g)--(o);
+\draw[go] (o)--(i);
+\draw[go] (i)--(d1);
+\draw[go] (d1)--node[lab]{Yes}(z);
+\draw[go] (z)|-(p.east);
+\draw[go] (d1)--node[lab]{No}(p);
+\draw[go] (p)--(n);
+\draw[go] (n)--(l1);
+\draw[go] (l1.west)--node[lab,pos=.3]{Yes}++(-8mm,0)|-([yshift=1.5mm]d1.north);
+\draw[go] (l1)--node[lab]{No}(nl);
+\draw[go] (nl)--(l2);
+\draw[go] (l2.west)--node[lab,pos=.2]{Yes}++(-16mm,0)|-(i.west);
+\draw[go] (l2)--node[lab]{No}(c);
+\draw[go] (c)--(r);
+\draw[go] (r)--(e);
+\end{tikzpicture}
+\end{document}

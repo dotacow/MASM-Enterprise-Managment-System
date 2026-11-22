@@ -1,0 +1,39 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {Start (main)};
+\node[sub,below=of s] (init) {Initialize: clear records, seat maps, counters};
+\node[io,below=of init] (menu) {DisplayMenu: clear screen, print the six options};
+\node[io,below=of menu] (rd) {ReadNumber: read the choice};
+\node[dec,below=of rd] (v) {Digits only and 1 to 6?};
+\node[err,left=8mm of v] (e) {ERROR: Invalid choice! Press any key};
+\node[dec,below=of v] (c1) {Choice = 1?};
+\node[dec,below=of c1] (c2) {Choice = 2?};
+\node[dec,below=of c2] (c3) {Choice = 3?};
+\node[dec,below=of c3] (c4) {Choice = 4?};
+\node[dec,below=of c4] (c5) {Choice = 5?};
+\node[term,below=of c5] (x) {Choice 6: print goodbye and exit};
+\node[sub,right=10mm of c1] (a1) {AddBooking};
+\node[sub,right=10mm of c2] (a2) {CancelBooking};
+\node[sub,right=10mm of c3] (a3) {DisplayTicket};
+\node[sub,right=10mm of c4] (a4) {DisplaySeatMap};
+\node[sub,right=10mm of c5] (a5) {DisplayStatistics};
+\coordinate (bus) at ($(a1.east)+(10mm,0)$);
+\node[io,text width=24mm] (w) at (bus |- rd) {WaitMsg: Press any key to continue};
+\draw[go] (s)--(init);
+\draw[go] (init)--(menu);
+\draw[go] (menu)--(rd);
+\draw[go] (rd)--(v);
+\draw[go] (v)--node[lab]{No}(e);
+\draw[go] (e.north)|-(menu.west);
+\draw[go] (v)--node[lab]{Yes}(c1);
+\foreach \i/\j in {1/2,2/3,3/4,4/5}{\draw[go] (c\i)--node[lab]{No}(c\j);}
+\draw[go] (c5)--node[lab]{No}(x);
+\foreach \i in {1,...,5}{
+  \draw[go] (c\i)--node[lab]{Yes}(a\i);
+  \draw[draw=gray!55!black] (a\i.east)--(a\i.east -| bus);}
+\draw[go] (a5.east -| bus)--(w.south);
+\draw[go] (w.north)|-(menu.east);
+\end{tikzpicture}
+\end{document}
