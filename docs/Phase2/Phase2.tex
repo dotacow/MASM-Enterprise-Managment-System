@@ -819,7 +819,7 @@ Initialize & None & Memory: offsets 0 to 2,347 cleared & None & Clear records, s
 \hline
 DisplayMenu & Keyboard & EAX = choice 1 to 6 & EAX & Show the menu and return a valid choice \\
 \hline
-AddBooking & Keyboard; activeCount, seatMaps & Memory: new record, seat byte, activeCount + 1; screen & Collect, validate, price and store a booking \\
+AddBooking & Keyboard; activeCount, seatMaps & Memory: new record, seat byte, activeCount + 1; screen & None & Collect, validate, price and store a booking \\
 \hline
 ValidateBookingID & Keyboard & EAX = ID, unique among active records & EAX & Read a six-digit ID and reject duplicates \\
 \hline
@@ -831,7 +831,7 @@ CalculateTicketPrice & ESI = record address (movieCode, category set) & EAX = fi
 \hline
 FindBookingByID & EAX = booking ID & ESI = record address; CF = 0 found, 1 not found & ESI, CF & Linear search for an active record with this ID \\
 \hline
-CancelBooking & Keyboard & Memory: activeFlag 0, seat byte 0, activeCount $-$ 1; screen & Deactivate a booking and release its seat \\
+CancelBooking & Keyboard & Memory: activeFlag 0, seat byte 0, activeCount $-$ 1; screen & None & Deactivate a booking and release its seat \\
 \hline
 DisplayTicket & Keyboard & Screen & None & Print one formatted ticket by booking ID \\
 \hline
