@@ -1,0 +1,30 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {CancelBooking};
+\node[io,below=of s] (r) {ReadBookingID: read booking ID};
+\node[dec,below=of r] (d1) {Digits only and 100000 to 999999?};
+\node[err,left=8mm of d1] (e1) {ERROR: Booking ID must be 6 digits!};
+\node[sub,below=of d1] (f) {FindBookingByID (EAX = ID) $\rightarrow$ ESI, CF};
+\node[dec,below=of f] (d2) {CF = 1 (not found)?};
+\node[err,right=10mm of d2] (e2) {ERROR: Booking ID not found!};
+\node[term,below=of e2] (r2) {Return to menu};
+\node[proc,below=of d2] (a) {[ESI].activeFlag $\leftarrow$ 0 (record kept, slot free)};
+\node[sub,below=of a] (g) {GetSeatAddress ([ESI].movieCode, [ESI].seatNumber) $\rightarrow$ EDI};
+\node[proc,below=of g] (z) {Byte at EDI $\leftarrow$ 0 (seat released)};
+\node[proc,below=of z] (c) {activeCount $\leftarrow$ activeCount $-$ 1};
+\node[io,below=of c] (ok) {Print Booking cancelled successfully!};
+\node[term,below=of ok] (e) {Return to menu};
+\draw[go] (s)--(r);
+\draw[go] (r)--(d1);
+\draw[go] (d1)--node[lab]{No}(e1);
+\draw[go] (e1.north)|-(r.west);
+\draw[go] (d1)--node[lab]{Yes}(f);
+\draw[go] (f)--(d2);
+\draw[go] (d2)--node[lab]{Yes}(e2);
+\draw[go] (e2)--(r2);
+\draw[go] (d2)--node[lab]{No}(a);
+\foreach \a/\b in {a/g,g/z,z/c,c/ok,ok/e}{\draw[go] (\a)--(\b);}
+\end{tikzpicture}
+\end{document}

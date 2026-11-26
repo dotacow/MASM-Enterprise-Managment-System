@@ -1,0 +1,31 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {DisplayTicket};
+\node[io,below=of s] (r) {ReadBookingID: read booking ID};
+\node[dec,below=of r] (d1) {Digits only and 100000 to 999999?};
+\node[err,left=8mm of d1] (e1) {ERROR: Booking ID must be 6 digits!};
+\node[sub,below=of d1] (f) {FindBookingByID (EAX = ID) $\rightarrow$ ESI, CF};
+\node[dec,below=of f] (d2) {CF = 1 (not found)?};
+\node[err,right=10mm of d2] (e2) {ERROR: Booking ID not found!};
+\node[term,below=of e2] (r2) {Return to menu};
+\node[io,below=of d2] (p1) {Print banner, CINEMA TICKET, banner};
+\node[io,below=of p1] (p2) {Print customer name (string at ESI) and booking ID};
+\node[sub,below=of p2] (p3) {PrintMovieName ([ESI].movieCode); print seat number};
+\node[sub,below=of p3] (p4) {PrintCategoryName ([ESI].category)};
+\node[proc,below=of p4] (dis) {discount $\leftarrow$ basePrice $-$ finalPrice};
+\node[io,below=of dis] (p5) {Print base price, discount, dashed line, final price, banner};
+\node[term,below=of p5] (e) {Return to menu};
+\draw[go] (s)--(r);
+\draw[go] (r)--(d1);
+\draw[go] (d1)--node[lab]{No}(e1);
+\draw[go] (e1.north)|-(r.west);
+\draw[go] (d1)--node[lab]{Yes}(f);
+\draw[go] (f)--(d2);
+\draw[go] (d2)--node[lab]{Yes}(e2);
+\draw[go] (e2)--(r2);
+\draw[go] (d2)--node[lab]{No}(p1);
+\foreach \a/\b in {p1/p2,p2/p3,p3/p4,p4/dis,dis/p5,p5/e}{\draw[go] (\a)--(\b);}
+\end{tikzpicture}
+\end{document}

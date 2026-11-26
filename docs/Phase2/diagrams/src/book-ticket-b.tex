@@ -1,0 +1,40 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}
+\node[term] (s) {From part 1: EBX = movie code};
+\node[io,below=of s] (rs) {ValidateSeat(EBX): read seat number};
+\node[dec,below=of rs] (d1) {Digits only and 1 to 20?};
+\node[err,left=8mm of d1] (e1) {ERROR: Invalid seat number!};
+\node[dec,below=of d1] (d2) {Seat byte in seat map = 1?};
+\node[err,left=8mm of d2] (e2) {ERROR: Seat already reserved!};
+\node[proc,below=of d2] (ss) {newRec.seatNumber $\leftarrow$ seat};
+\node[io,below=of ss] (rc) {ValidateCategory: read category};
+\node[dec,below=of rc] (d3) {Digits only and 1 to 3?};
+\node[err,left=8mm of d3] (e3) {ERROR: Invalid category!};
+\node[proc,below=of d3] (sc) {newRec.category $\leftarrow$ category};
+\node[sub] (pr) at ($(rs)+(72mm,0)$) {CalculateTicketPrice(ESI = newRec): base, final};
+\node[proc,below=of pr] (fl) {newRec.activeFlag $\leftarrow$ 1};
+\node[sub,below=of fl] (ff) {FindFreeSlot $\rightarrow$ EDI = first inactive slot};
+\node[proc,below=of ff] (cp) {Copy 37 bytes newRec $\rightarrow$ slot (REP MOVSB)};
+\node[sub,below=of cp] (gs) {GetSeatAddress(EBX, seat) $\rightarrow$ EDI; mark seat byte = 1};
+\node[proc,below=of gs] (ac) {activeCount $\leftarrow$ activeCount + 1};
+\node[io,below=of ac] (ok) {Print Booking added successfully! and the final price};
+\node[term,below=of ok] (r) {Return to menu};
+\draw[go] (s)--(rs);
+\draw[go] (rs)--(d1);
+\draw[go] (d1)--node[lab]{No}(e1);
+\draw[go] (e1.north)|-(rs.west);
+\draw[go] (d1)--node[lab]{Yes}(d2);
+\draw[go] (d2)--node[lab]{Yes}(e2);
+\draw[go] (e2.west)--++(-4mm,0)|-([yshift=1.5mm]rs.west);
+\draw[go] (d2)--node[lab]{No}(ss);
+\draw[go] (ss)--(rc);
+\draw[go] (rc)--(d3);
+\draw[go] (d3)--node[lab]{No}(e3);
+\draw[go] (e3.north)|-(rc.west);
+\draw[go] (d3)--node[lab]{Yes}(sc);
+\draw[go] (sc.east)-|($(sc.east)!0.5!(sc.east -| pr.west)$)|-(pr.west);
+\foreach \a/\b in {pr/fl,fl/ff,ff/cp,cp/gs,gs/ac,ac/ok,ok/r}{\draw[go] (\a)--(\b);}
+\end{tikzpicture}
+\end{document}

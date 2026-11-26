@@ -1,0 +1,15 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{flowstyle}
+\begin{document}
+\begin{tikzpicture}[x=3.9mm,y=1mm]
+% start offset / size / name / shade
+\foreach \o/\s/\n/\st in {0/21/customerName/cell,21/4/bookingID/hot,25/1/movieCode/cell,26/1/seatNumber/hot,27/1/category/cell,28/1/activeFlag/hot,29/4/basePrice/cell,33/4/finalPrice/hot}{
+  \node[\st,minimum width=\s*3.9mm,anchor=south west,minimum height=9mm] at (\o,0) {};
+  \node[note,anchor=north] at (\o,-1) {\o};
+  \node[anchor=south west,rotate=60,font=\scriptsize] at (\o+\s/2-0.2,10.5) {\texttt{\n} (\s)};
+}
+\node[note,anchor=north] at (37,-1) {37};
+\draw[decorate,decoration={brace,mirror,amplitude=4pt},gray!55!black] (0,-6)--(37,-6) node[midway,below=4pt,font=\scriptsize]{one record = SIZEOF BOOKING = 37 bytes};
+\node[font=\scriptsize,anchor=east] at (-0.5,4.5) {byte offset};
+\end{tikzpicture}
+\end{document}
