@@ -214,6 +214,7 @@ END main
 
 PROCEDURE Initialize
     ; bookings .. leastBooked are contiguous (Section 2.3): 2,348 bytes
+    CLD                                          ; DF = 0, so REP moves forwards
     EDI <- OFFSET bookings
     ECX <- 2348
     AL  <- 0
